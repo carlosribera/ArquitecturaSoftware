@@ -1,0 +1,75 @@
+
+create table especialidad(
+	idespecialidad MEDIUMINT NOT NULL AUTO_INCREMENT,
+	nombre varchar(50) not null,
+    PRIMARY KEY (idespecialidad)
+);
+
+insert into especialidad (nombre) values('mantenimiento eléctrico y eléctronico');
+insert into especialidad (nombre) values('Ingeniero mecánico automotriz');
+
+create table cliente(
+	idcliente MEDIUMINT NOT NULL AUTO_INCREMENT,
+	nombre varchar(30) not null,
+	appaterno varchar(30) not null,
+	apmaterno varchar(30),
+	correo varchar(30),
+	direccion varchar(30) not null,
+	telefono integer not null,
+    PRIMARY KEY (idcliente)
+);
+
+insert into cliente (nombre, appaterno,apmaterno, correo, direccion, telefono) 
+values('Heidy Wendy','Gatica', 'Lopez','Heidy@gmail.com','av. cumavi 4to anillo', 70000123);
+insert into cliente (nombre, appaterno,apmaterno, correo, direccion, telefono) 
+values('Camila','tifelp', '','Camila@gmail.com','av. Mutualista 3er anillo', 70000111);
+
+create table mecanico(
+	idmecanico MEDIUMINT NOT NULL AUTO_INCREMENT,
+	nombre varchar(30) not null,
+	appaterno varchar(30) not null,
+	apmaterno varchar(30),
+	telefono integer not null,
+     PRIMARY KEY (idmecanico),
+	idespecialidad integer references especialidad(idespecialidad) on delete cascade on update cascade
+);
+
+insert into mecanico (nombre, appaterno,apmaterno,telefono,idespecialidad) 
+values('Lorenzo','Camacho', 'Torrez',80000000,1);
+insert into mecanico (nombre, appaterno,apmaterno,telefono,idespecialidad) 
+values('Jorge','Ticona', 'Beltran',68004563,2);
+
+
+create table vehiculo(
+	idvehiculo MEDIUMINT NOT NULL AUTO_INCREMENT,
+	marca varchar(30) not null,
+	modelo varchar(30) not null,
+	color varchar(30) not null,
+	matricula varchar(30) not null,	
+     PRIMARY KEY (idvehiculo),
+	idcliente integer references cliente(idcliente) on delete cascade on update cascade,
+	estado varchar(30) not null
+);
+
+insert into Vehiculo (marca,modelo,color,matricula,idcliente,estado) 
+values('toyota','rav4','blanco','1234XLK',1,'Mantenimiento');
+insert into Vehiculo (marca, modelo,color,matricula,idcliente,estado) 
+values('Suzuki','alto','plateado','1174TCL',2,'Mantenimiento');
+
+create table reparacion(
+    idreparacion MEDIUMINT NOT NULL AUTO_INCREMENT,
+	fecha date not null,	
+	observacion varchar(30),
+	costototal decimal(18,2) not null, 
+    PRIMARY KEY (idreparacion),
+	idvehiculo integer references vehiculo(idvehiculo ) on delete cascade on update cascade	
+);
+
+create table detallereparacion( 
+	iddetallereparacion MEDIUMINT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (iddetallereparacion),
+	idreparacion integer references reparacion(idreparacion ) on delete cascade on update cascade,
+	idmecanico  integer references mecanico(idmecanico) on delete cascade on update cascade,
+	observacion varchar(30) not null,
+	precio decimal(18,2) not null
+);
